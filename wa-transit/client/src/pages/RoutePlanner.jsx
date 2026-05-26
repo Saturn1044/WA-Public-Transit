@@ -99,10 +99,10 @@ export default function RoutePlanner() {
   return (
     <div className="flex h-full relative">
       {/* Left panel */}
-      <div className={`flex flex-col bg-white border-r border-gray-200 shadow-sm transition-all duration-300 ${
+      <div className={`flex flex-col bg-white border-r border-gray-200 shadow-sm ${
         panelOpen
-          ? 'absolute inset-0 z-20 md:relative md:inset-auto md:z-10 md:w-96'
-          : 'w-0 overflow-hidden z-10'
+          ? 'fixed inset-0 z-50 md:relative md:inset-auto md:z-10 md:w-96 md:transition-all md:duration-300'
+          : 'hidden md:flex md:w-0 md:overflow-hidden md:z-10 md:transition-all md:duration-300'
       }`}>
 
         {/* Sticky header */}
