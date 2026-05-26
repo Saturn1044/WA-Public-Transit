@@ -193,6 +193,16 @@ export default function MapView({ stops, selectedStop, onStopClick, routeLegs })
   const routeLayerRef = useRef(null)
   const [legendCollapsed, setLegendCollapsed] = useState(false)
 
+  // Invalidate map size whenever the container is resized or shown
+  useEffect(() => {
+    if (!mapRef.current) return
+    const observer = new ResizeObserver(() => {
+      mapInstanceRef.current?.invalidateSize()
+    })
+    observer.observe(mapRef.current)
+    return () => observer.disconnect()
+  }, [])
+
   // Initialize map
   useEffect(() => {
     if (mapInstanceRef.current) return
