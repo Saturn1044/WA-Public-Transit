@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import MapView from '../components/MapView'
 import StopSearch from '../components/StopSearch'
 import RouteResults from '../components/RouteResults'
@@ -26,11 +25,12 @@ export default function Home() {
   const [error, setError] = useState(null)
   const [selectedRoute, setSelectedRoute] = useState(null)
   const [mapLegs, setMapLegs] = useState([])
-  const [panelOpen, setPanelOpen] = useState(() => window.innerWidth >= 768)
-  const navigate = useNavigate()
+  const [panelOpen, setPanelOpen] = useState(false)
 
   useEffect(() => {
     getAllStops().then(setAllStops).catch(() => {})
+    // Open panel by default on desktop only
+    if (window.innerWidth >= 768) setPanelOpen(true)
   }, [])
 
   const handleSearch = async (orig = origin, dest = destination) => {
@@ -64,20 +64,12 @@ export default function Home() {
     }
   }
 
-  const swap = () => {
-    setOrigin(destination)
-    setDestination(origin)
-    setResults(null); setMapLegs([]); setSelectedRoute(null)
-  }
-
   return (
     <div className="h-full flex">
       {/* ── Side panel ── */}
-      <div
-        className={`flex-col bg-white shadow-xl border-r border-gray-200 flex-shrink-0
-          ${panelOpen ? 'flex w-full md:w-96' : 'hidden md:flex md:w-0 md:overflow-hidden'}
-        `}
-      >
+      <div className={`flex-col bg-white shadow-xl border-r border-gray-200 flex-shrink-0
+        ${panelOpen ? 'flex w-full md:w-96' : 'hidden md:flex md:w-0 md:overflow-hidden'}
+      `}>
         <div className="flex-shrink-0 p-4 bg-[#0d1b2a] text-white">
           <div className="flex items-center justify-between mb-3">
             <h1 className="font-bold text-lg">Trip Planner</h1>
@@ -87,20 +79,13 @@ export default function Home() {
             >×</button>
           </div>
 
-          {/* Origin / Destination */}
-          <div className="space-y-2 relative">
+          <div className="space-y-2">
             <StopSearch
               label="From"
               placeholder="Search origin stop…"
               value={origin}
               onSelect={s => { setOrigin(s); setResults(null) }}
             />
-            <div className="absolute right-0 top-1/2 -translate-y-1/2 z-10 pr-1">
-              <button
-                onClick={swap}
-                className="w-7 h-7 rounded-full bg-gray-700 hover:bg-gray-600 text-white text-sm flex items-center justify-center"
-              >⇅</button>
-            </div>
             <StopSearch
               label="To"
               placeholder="Search destination stop…"
@@ -123,30 +108,31 @@ export default function Home() {
           )}
         </div>
 
-        {/* Popular routes */}
-        {!results && !loading && (
-          <div className="p-4 flex-shrink-0 border-b border-gray-200">
-            <div className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">
-              Popular Routes
+        {/* Scrollable body */}
+        <div className="flex-1 overflow-y-auto">
+          {/* Popular routes */}
+          {!results && !loading && (
+            <div className="p-4 border-b border-gray-200">
+              <div className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">
+                Popular Routes
+              </div>
+              <div className="grid grid-cols-2 gap-1.5">
+                {POPULAR.map(q => (
+                  <button
+                    key={q.label}
+                    onClick={() => handleQuick(q)}
+                    disabled={allStops.length === 0}
+                    className="text-left text-xs px-2.5 py-2 rounded-lg bg-blue-50 hover:bg-blue-100
+                      text-blue-800 font-medium transition-colors border border-blue-100 disabled:opacity-40"
+                  >
+                    {q.label}
+                  </button>
+                ))}
+              </div>
             </div>
-            <div className="grid grid-cols-2 gap-1.5">
-              {POPULAR.map(q => (
-                <button
-                  key={q.label}
-                  onClick={() => handleQuick(q)}
-                  disabled={allStops.length === 0}
-                  className="text-left text-xs px-2.5 py-2 rounded-lg bg-blue-50 hover:bg-blue-100
-                    text-blue-800 font-medium transition-colors border border-blue-100 disabled:opacity-40"
-                >
-                  {q.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
+          )}
 
-        {/* Route results */}
-        <div className="flex-1 overflow-hidden">
+          {/* Route results */}
           {loading && (
             <div className="flex items-center justify-center h-32 text-gray-400">
               <div className="text-center">
@@ -162,34 +148,30 @@ export default function Home() {
               selectedRoute={selectedRoute}
             />
           )}
-        </div>
 
-        {/* Selected stop info */}
-        {selectedStop && !results && (
-          <div className="flex-shrink-0 border-t border-gray-200 p-3 bg-gray-50">
-            <div className="flex justify-between items-start mb-1">
-              <div className="font-semibold text-sm">{selectedStop.name}</div>
-              <button onClick={() => setSelectedStop(null)} className="text-gray-400 text-lg leading-none">×</button>
+          {/* Selected stop info */}
+          {selectedStop && !results && (
+            <div className="border-t border-gray-200 p-3 bg-gray-50">
+              <div className="flex justify-between items-start mb-1">
+                <div className="font-semibold text-sm">{selectedStop.name}</div>
+                <button onClick={() => setSelectedStop(null)} className="text-gray-400 text-lg leading-none">×</button>
+              </div>
+              {selectedStop.address && (
+                <p className="text-xs text-gray-500 mb-2">📍 {selectedStop.address}</p>
+              )}
+              <div className="flex gap-2">
+                <button
+                  onClick={() => { setOrigin(selectedStop); setResults(null) }}
+                  className="flex-1 text-xs bg-[#005DAA] text-white py-1.5 rounded font-medium"
+                >Start here</button>
+                <button
+                  onClick={() => { setDestination(selectedStop); setResults(null) }}
+                  className="flex-1 text-xs border border-[#005DAA] text-[#005DAA] py-1.5 rounded font-medium"
+                >End here</button>
+              </div>
             </div>
-            {selectedStop.address && (
-              <p className="text-xs text-gray-500 mb-2">📍 {selectedStop.address}</p>
-            )}
-            <div className="flex gap-2">
-              <button
-                onClick={() => { setOrigin(selectedStop); setResults(null) }}
-                className="flex-1 text-xs bg-[#005DAA] text-white py-1.5 rounded font-medium"
-              >
-                Start here
-              </button>
-              <button
-                onClick={() => { setDestination(selectedStop); setResults(null) }}
-                className="flex-1 text-xs border border-[#005DAA] text-[#005DAA] py-1.5 rounded font-medium"
-              >
-                End here
-              </button>
-            </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       {/* ── Map ── */}
@@ -201,7 +183,6 @@ export default function Home() {
           routeLegs={mapLegs}
         />
 
-        {/* Open panel button (when panel is closed) */}
         {!panelOpen && (
           <button
             onClick={() => setPanelOpen(true)}
@@ -212,7 +193,6 @@ export default function Home() {
           </button>
         )}
 
-        {/* Active route summary bar */}
         {selectedRoute && (
           <div className="absolute bottom-4 left-4 right-4 z-[500] bg-white rounded-xl shadow-xl border border-gray-200 p-3">
             <div className="flex items-center justify-between gap-4 text-sm">

@@ -88,13 +88,6 @@ export default function RoutePlanner() {
     setMapLegs(route.legs)
   }
 
-  const swap = () => {
-    setOrigin(destination)
-    setDestination(origin)
-    setResults(null)
-    setMapLegs([])
-    setSelectedRoute(null)
-  }
 
   return (
     <div className="flex h-full">
@@ -114,20 +107,13 @@ export default function RoutePlanner() {
             >×</button>
           </div>
 
-          <div className="space-y-2 relative">
+          <div className="space-y-2">
             <StopSearch
               label="From"
               placeholder="Search origin stop…"
               value={origin}
               onSelect={(s) => { setOrigin(s); setResults(null) }}
             />
-            <div className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-2 z-10">
-              <button
-                onClick={swap}
-                className="w-8 h-8 rounded-full bg-white border-2 border-gray-300 flex items-center
-                  justify-center text-gray-500 hover:bg-gray-50 shadow-sm text-sm"
-              >⇅</button>
-            </div>
             <StopSearch
               label="To"
               placeholder="Search destination stop…"
