@@ -1,7 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "PowerShell(cmd /c dir \"c:\\\\Users\\\\Phoenix\\\\30 days app\\\\wa-transit\" /s /b)"
-    ]
-  }
-}
