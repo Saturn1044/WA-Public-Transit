@@ -71,14 +71,12 @@ export default function Home() {
   }
 
   return (
-    <div className="relative h-full flex">
+    <div className="h-full flex">
       {/* ── Side panel ── */}
       <div
-        className={`flex flex-col bg-white shadow-xl border-r border-gray-200 ${
-          panelOpen
-            ? 'fixed inset-0 z-50 md:relative md:inset-auto md:z-10 md:w-96 md:transition-all md:duration-300'
-            : 'hidden md:flex md:w-0 md:overflow-hidden md:z-10 md:transition-all md:duration-300'
-        }`}
+        className={`flex-col bg-white shadow-xl border-r border-gray-200 flex-shrink-0
+          ${panelOpen ? 'flex w-full md:w-96' : 'hidden md:flex md:w-0 md:overflow-hidden'}
+        `}
       >
         <div className="flex-shrink-0 p-4 bg-[#0d1b2a] text-white">
           <div className="flex items-center justify-between mb-3">
@@ -195,7 +193,7 @@ export default function Home() {
       </div>
 
       {/* ── Map ── */}
-      <div className="flex-1 relative">
+      <div className={`flex-1 relative ${panelOpen ? 'hidden md:block' : 'block'}`}>
         <MapView
           stops={allStops}
           selectedStop={selectedStop}

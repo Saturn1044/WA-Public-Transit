@@ -97,13 +97,12 @@ export default function RoutePlanner() {
   }
 
   return (
-    <div className="flex h-full relative">
-      {/* Left panel */}
-      <div className={`flex flex-col bg-white border-r border-gray-200 shadow-sm ${
-        panelOpen
-          ? 'fixed inset-0 z-50 md:relative md:inset-auto md:z-10 md:w-96 md:transition-all md:duration-300'
-          : 'hidden md:flex md:w-0 md:overflow-hidden md:z-10 md:transition-all md:duration-300'
-      }`}>
+    <div className="flex h-full">
+
+      {/* Panel — full width on mobile, sidebar on desktop */}
+      <div className={`flex-col bg-white border-r border-gray-200 shadow-sm flex-shrink-0
+        ${panelOpen ? 'flex w-full md:w-96' : 'hidden md:flex md:w-0 md:overflow-hidden'}
+      `}>
 
         {/* Sticky header */}
         <div className="flex-shrink-0 p-4 border-b border-gray-200 bg-gray-50">
@@ -127,7 +126,6 @@ export default function RoutePlanner() {
                 onClick={swap}
                 className="w-8 h-8 rounded-full bg-white border-2 border-gray-300 flex items-center
                   justify-center text-gray-500 hover:bg-gray-50 shadow-sm text-sm"
-                title="Swap origin and destination"
               >⇅</button>
             </div>
             <StopSearch
@@ -148,15 +146,12 @@ export default function RoutePlanner() {
           </button>
 
           {error && (
-            <div className="mt-2 text-xs text-red-600 bg-red-50 rounded-lg px-3 py-2">
-              {error}
-            </div>
+            <div className="mt-2 text-xs text-red-600 bg-red-50 rounded-lg px-3 py-2">{error}</div>
           )}
         </div>
 
         {/* Scrollable body */}
         <div className="flex-1 overflow-y-auto">
-          {/* Popular routes */}
           {!results && !loading && (
             <div className="p-4 border-b border-gray-100">
               <div className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">
@@ -207,8 +202,8 @@ export default function RoutePlanner() {
         </div>
       </div>
 
-      {/* Map */}
-      <div className="flex-1 relative">
+      {/* Map — hidden on mobile when panel is open */}
+      <div className={`flex-1 relative ${panelOpen ? 'hidden md:block' : 'block'}`}>
         <MapView
           stops={allStops}
           selectedStop={null}
@@ -227,7 +222,7 @@ export default function RoutePlanner() {
         )}
 
         {selectedRoute && (
-          <div className="absolute bottom-4 left-4 right-4 bg-white rounded-xl shadow-xl p-3 border border-gray-200">
+          <div className="absolute bottom-4 left-4 right-4 bg-white rounded-xl shadow-xl p-3 border border-gray-200 z-[500]">
             <div className="flex items-center justify-between text-sm">
               <div className="font-semibold truncate">{selectedRoute.summary}</div>
               <div className="flex gap-4 flex-shrink-0 text-right">
