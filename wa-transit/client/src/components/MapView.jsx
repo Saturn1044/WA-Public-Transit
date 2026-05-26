@@ -328,7 +328,7 @@ export default function MapView({ stops, selectedStop, onStopClick, routeLegs })
 
   return (
     <div className="relative w-full h-full">
-      <div ref={mapRef} className="w-full h-full" />
+      <div ref={mapRef} className="w-full h-full" style={{ touchAction: 'none' }} />
 
       {/* ── Legend ── */}
       <div className="absolute bottom-4 right-3 z-[500] bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden"

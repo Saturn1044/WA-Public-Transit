@@ -26,7 +26,7 @@ export default function Home() {
   const [error, setError] = useState(null)
   const [selectedRoute, setSelectedRoute] = useState(null)
   const [mapLegs, setMapLegs] = useState([])
-  const [panelOpen, setPanelOpen] = useState(true)
+  const [panelOpen, setPanelOpen] = useState(() => window.innerWidth >= 768)
   const navigate = useNavigate()
 
   useEffect(() => {
