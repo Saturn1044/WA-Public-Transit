@@ -200,7 +200,7 @@ export default function RoutePlanner() {
         {!panelOpen && (
           <button
             onClick={() => setPanelOpen(true)}
-            className="absolute top-4 left-4 z-[500] bg-white shadow-xl border border-gray-200
+            className="absolute top-4 right-4 z-[500] bg-white shadow-xl border border-gray-200
               rounded-xl px-4 py-2.5 text-sm font-bold text-[#005DAA] hover:bg-blue-50 flex items-center gap-2"
           >
             🗺️ Plan a Trip
