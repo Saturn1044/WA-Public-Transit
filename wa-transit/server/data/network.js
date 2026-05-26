@@ -1,0 +1,542 @@
+// All stops are real locations with accurate coordinates
+const stops = {
+  // ── SEATTLE CORE ──────────────────────────────────────────────
+  westlake: {
+    id: 'westlake', name: 'Westlake Station', city: 'Seattle',
+    lat: 47.6115, lon: -122.3370,
+    agencies: ['kcm', 'sound-transit'], modes: ['light-rail', 'bus'],
+    description: 'Central Seattle hub. Link 1-Line, Metro buses, Monorail.',
+  },
+  pioneer_sq: {
+    id: 'pioneer_sq', name: 'Pioneer Square Station', city: 'Seattle',
+    lat: 47.6014, lon: -122.3327,
+    agencies: ['sound-transit'], modes: ['light-rail'],
+    description: 'Link 1-Line station in historic Pioneer Square.',
+  },
+  intl_dist: {
+    id: 'intl_dist', name: 'International District/Chinatown Station', city: 'Seattle',
+    lat: 47.5983, lon: -122.3279,
+    agencies: ['sound-transit'], modes: ['light-rail'],
+    description: 'Junction of Link 1-Line and 2-Line. Near King Street Station.',
+  },
+  king_st: {
+    id: 'king_st', name: 'King Street Station', city: 'Seattle',
+    lat: 47.5983, lon: -122.3303,
+    agencies: ['amtrak', 'sound-transit'], modes: ['intercity-rail', 'commuter-rail'],
+    description: 'Amtrak Cascades, Sounder North & South commuter rail.',
+  },
+  capitol_hill: {
+    id: 'capitol_hill', name: 'Capitol Hill Station', city: 'Seattle',
+    lat: 47.6196, lon: -122.3196,
+    agencies: ['sound-transit'], modes: ['light-rail'],
+    description: 'Link 1-Line. Serves Capitol Hill neighborhood.',
+  },
+  uw_station: {
+    id: 'uw_station', name: 'University of Washington Station', city: 'Seattle',
+    lat: 47.6494, lon: -122.3037,
+    agencies: ['sound-transit', 'kcm'], modes: ['light-rail', 'bus'],
+    description: 'Link 1-Line. Connects to UW campus and Husky Stadium.',
+  },
+  northgate: {
+    id: 'northgate', name: 'Northgate Station', city: 'Seattle',
+    lat: 47.7057, lon: -122.3437,
+    agencies: ['sound-transit', 'kcm'], modes: ['light-rail', 'bus'],
+    description: 'Link 1-Line. Major north Seattle hub. Free parking.',
+  },
+  sodo: {
+    id: 'sodo', name: 'SODO Station', city: 'Seattle',
+    lat: 47.5771, lon: -122.3277,
+    agencies: ['sound-transit'], modes: ['light-rail'],
+    description: 'Link 1-Line. Near sports stadiums.',
+  },
+  beacon_hill: {
+    id: 'beacon_hill', name: 'Beacon Hill Station', city: 'Seattle',
+    lat: 47.5742, lon: -122.3118,
+    agencies: ['sound-transit'], modes: ['light-rail'],
+    description: 'Link 1-Line. Deepest station in the system.',
+  },
+  columbia_city: {
+    id: 'columbia_city', name: 'Columbia City Station', city: 'Seattle',
+    lat: 47.5600, lon: -122.2939,
+    agencies: ['sound-transit'], modes: ['light-rail'],
+    description: 'Link 1-Line. Vibrant neighborhood hub.',
+  },
+  othello: {
+    id: 'othello', name: 'Othello Station', city: 'Seattle',
+    lat: 47.5391, lon: -122.2832,
+    agencies: ['sound-transit'], modes: ['light-rail'],
+    description: 'Link 1-Line. Serves Rainier Valley.',
+  },
+  rainier_beach: {
+    id: 'rainier_beach', name: 'Rainier Beach Station', city: 'Seattle',
+    lat: 47.5218, lon: -122.2827,
+    agencies: ['sound-transit'], modes: ['light-rail'],
+    description: 'Link 1-Line. Southernmost Seattle station.',
+  },
+  colman_dock: {
+    id: 'colman_dock', name: 'Seattle — Colman Dock (Ferry Terminal)', city: 'Seattle',
+    lat: 47.6024, lon: -122.3384,
+    agencies: ['wsf'], modes: ['ferry'],
+    description: 'Washington State Ferries terminal. Bainbridge Island & Bremerton routes.',
+  },
+  ballard: {
+    id: 'ballard', name: 'Ballard (NW Market St & 15th Ave)', city: 'Seattle',
+    lat: 47.6688, lon: -122.3836,
+    agencies: ['kcm'], modes: ['bus'],
+    description: 'RapidRide D Line terminus. Northwest Seattle.',
+  },
+  west_seattle: {
+    id: 'west_seattle', name: 'West Seattle Junction', city: 'Seattle',
+    lat: 47.5601, lon: -122.3802,
+    agencies: ['kcm'], modes: ['bus'],
+    description: 'RapidRide C Line. West Seattle neighborhood hub.',
+  },
+  aurora_village: {
+    id: 'aurora_village', name: 'Aurora Village Transit Center', city: 'Shoreline',
+    lat: 47.7741, lon: -122.3415,
+    agencies: ['kcm', 'community-transit'], modes: ['bus'],
+    description: 'Metro RapidRide E northern terminus. Community Transit connections.',
+  },
+
+  // ── SEATAC / SOUTH KING COUNTY ────────────────────────────────
+  tukwila_link: {
+    id: 'tukwila_link', name: 'Tukwila International Blvd Station', city: 'Tukwila',
+    lat: 47.4680, lon: -122.2884,
+    agencies: ['sound-transit', 'kcm'], modes: ['light-rail', 'bus'],
+    description: 'Link 1-Line. Free shuttle to Tukwila Sounder station.',
+  },
+  seatac: {
+    id: 'seatac', name: 'SeaTac/Airport Station', city: 'SeaTac',
+    lat: 47.4443, lon: -122.2988,
+    agencies: ['sound-transit'], modes: ['light-rail'],
+    description: 'Link 1-Line direct to Seattle-Tacoma International Airport.',
+  },
+  angle_lake: {
+    id: 'angle_lake', name: 'Angle Lake Station', city: 'SeaTac',
+    lat: 47.4249, lon: -122.2980,
+    agencies: ['sound-transit', 'kcm'], modes: ['light-rail', 'bus'],
+    description: 'Link 1-Line southern end of original alignment. Free parking.',
+  },
+  federal_way_tc: {
+    id: 'federal_way_tc', name: 'Federal Way Transit Center', city: 'Federal Way',
+    lat: 47.3134, lon: -122.3127,
+    agencies: ['sound-transit', 'kcm'], modes: ['light-rail', 'bus'],
+    description: 'Link 1-Line southern terminus. Sound Transit & Metro buses.',
+  },
+  renton_tc: {
+    id: 'renton_tc', name: 'Renton Transit Center', city: 'Renton',
+    lat: 47.4801, lon: -122.2001,
+    agencies: ['kcm', 'sound-transit'], modes: ['bus'],
+    description: 'Major Renton hub. Metro & ST Express connections.',
+  },
+  burien_tc: {
+    id: 'burien_tc', name: 'Burien Transit Center', city: 'Burien',
+    lat: 47.4729, lon: -122.3449,
+    agencies: ['kcm'], modes: ['bus'],
+    description: 'RapidRide F terminus. Metro bus hub.',
+  },
+  tukwila_sounder: {
+    id: 'tukwila_sounder', name: 'Tukwila Station (Sounder)', city: 'Tukwila',
+    lat: 47.4674, lon: -122.2443,
+    agencies: ['sound-transit'], modes: ['commuter-rail'],
+    description: 'Sounder South commuter rail. Free shuttle to Link station.',
+  },
+
+  // ── EAST KING COUNTY / EASTSIDE ───────────────────────────────
+  judkins_park: {
+    id: 'judkins_park', name: 'Judkins Park Station', city: 'Seattle',
+    lat: 47.5912, lon: -122.2963,
+    agencies: ['sound-transit'], modes: ['light-rail'],
+    description: 'Link 2-Line. Near I-90 lid parks.',
+  },
+  mercer_island: {
+    id: 'mercer_island', name: 'Mercer Island Station', city: 'Mercer Island',
+    lat: 47.5683, lon: -122.2220,
+    agencies: ['sound-transit', 'kcm'], modes: ['light-rail', 'bus'],
+    description: 'Link 2-Line. Bus intercept on Mercer Island.',
+  },
+  south_bellevue: {
+    id: 'south_bellevue', name: 'South Bellevue Station', city: 'Bellevue',
+    lat: 47.5721, lon: -122.1908,
+    agencies: ['sound-transit'], modes: ['light-rail'],
+    description: 'Link 2-Line. Free parking. Bellevue Slough Wetlands nearby.',
+  },
+  bellevue_downtown: {
+    id: 'bellevue_downtown', name: 'Bellevue Downtown Station', city: 'Bellevue',
+    lat: 47.6155, lon: -122.2009,
+    agencies: ['sound-transit', 'kcm'], modes: ['light-rail', 'bus'],
+    description: 'Link 2-Line. Heart of downtown Bellevue. Major bus connections.',
+  },
+  east_main: {
+    id: 'east_main', name: 'East Main Station', city: 'Bellevue',
+    lat: 47.6086, lon: -122.1917,
+    agencies: ['sound-transit'], modes: ['light-rail'],
+    description: 'Link 2-Line. Bellevue residential neighborhood.',
+  },
+  overlake_village: {
+    id: 'overlake_village', name: 'Overlake Village Station', city: 'Redmond',
+    lat: 47.6270, lon: -122.1439,
+    agencies: ['sound-transit', 'kcm'], modes: ['light-rail', 'bus'],
+    description: 'Link 2-Line. Near Microsoft campus.',
+  },
+  redmond_tech: {
+    id: 'redmond_tech', name: 'Redmond Technology Station', city: 'Redmond',
+    lat: 47.6422, lon: -122.1334,
+    agencies: ['sound-transit', 'kcm'], modes: ['light-rail', 'bus'],
+    description: 'Link 2-Line. Microsoft main campus. RapidRide B connections.',
+  },
+  downtown_redmond: {
+    id: 'downtown_redmond', name: 'Downtown Redmond Station', city: 'Redmond',
+    lat: 47.6798, lon: -122.1228,
+    agencies: ['sound-transit'], modes: ['light-rail'],
+    description: 'Link 2-Line eastern terminus. Downtown Redmond and Marymoor Park.',
+  },
+
+  // ── NORTH SOUND (SNOHOMISH COUNTY) ────────────────────────────
+  shoreline_148th: {
+    id: 'shoreline_148th', name: 'Shoreline South/148th Station', city: 'Shoreline',
+    lat: 47.7224, lon: -122.3426,
+    agencies: ['sound-transit'], modes: ['light-rail'],
+    description: 'Link 1-Line. Free parking.',
+  },
+  shoreline_185th: {
+    id: 'shoreline_185th', name: 'Shoreline North/185th Station', city: 'Shoreline',
+    lat: 47.7549, lon: -122.3404,
+    agencies: ['sound-transit', 'kcm'], modes: ['light-rail', 'bus'],
+    description: 'Link 1-Line. Express bus connections.',
+  },
+  mountlake_terrace: {
+    id: 'mountlake_terrace', name: 'Mountlake Terrace Station', city: 'Mountlake Terrace',
+    lat: 47.7895, lon: -122.3130,
+    agencies: ['sound-transit', 'community-transit'], modes: ['light-rail', 'bus'],
+    description: 'Link 1-Line. Community Transit connections.',
+  },
+  lynnwood: {
+    id: 'lynnwood', name: 'Lynnwood City Center Station', city: 'Lynnwood',
+    lat: 47.8177, lon: -122.3130,
+    agencies: ['sound-transit', 'community-transit'], modes: ['light-rail', 'bus'],
+    description: 'Link 1-Line northern terminus. Major Snohomish County hub. Free parking.',
+  },
+  ash_way: {
+    id: 'ash_way', name: 'Ash Way Park & Ride', city: 'Lynnwood',
+    lat: 47.8553, lon: -122.2598,
+    agencies: ['community-transit'], modes: ['bus'],
+    description: 'Community Transit Swift Blue Line. Express bus to Seattle.',
+  },
+  mariner: {
+    id: 'mariner', name: 'Mariner Park & Ride', city: 'Everett',
+    lat: 47.8820, lon: -122.2650,
+    agencies: ['community-transit', 'everett-transit'], modes: ['bus'],
+    description: 'Swift Blue Line. Connection between CT and Everett Transit.',
+  },
+  everett_station: {
+    id: 'everett_station', name: 'Everett Station', city: 'Everett',
+    lat: 47.9767, lon: -122.2026,
+    agencies: ['sound-transit', 'community-transit', 'everett-transit', 'amtrak'], modes: ['commuter-rail', 'bus', 'intercity-rail'],
+    description: 'Sounder North terminus. Community Transit, Everett Transit, Amtrak Cascades.',
+  },
+
+  // ── KITSAP / FERRY TERMINALS ──────────────────────────────────
+  bainbridge_ferry: {
+    id: 'bainbridge_ferry', name: 'Bainbridge Island Ferry Terminal', city: 'Bainbridge Island',
+    lat: 47.6234, lon: -122.5128,
+    agencies: ['wsf', 'kitsap-transit'], modes: ['ferry', 'bus'],
+    description: 'WSF ferry to/from Seattle. 35-min crossing. Kitsap Transit buses.',
+  },
+  bremerton_ferry: {
+    id: 'bremerton_ferry', name: 'Bremerton Ferry Terminal', city: 'Bremerton',
+    lat: 47.5628, lon: -122.6268,
+    agencies: ['wsf', 'kitsap-transit'], modes: ['ferry', 'bus'],
+    description: 'WSF ferry to/from Seattle. 60-min crossing.',
+  },
+  edmonds_ferry: {
+    id: 'edmonds_ferry', name: 'Edmonds Ferry Terminal', city: 'Edmonds',
+    lat: 47.8117, lon: -122.3851,
+    agencies: ['wsf', 'amtrak', 'sound-transit'], modes: ['ferry', 'intercity-rail', 'commuter-rail'],
+    description: 'WSF to Kingston. Amtrak Cascades stop. Sounder North stop.',
+  },
+  kingston_ferry: {
+    id: 'kingston_ferry', name: 'Kingston Ferry Terminal', city: 'Kingston',
+    lat: 47.7960, lon: -122.4960,
+    agencies: ['wsf', 'kitsap-transit'], modes: ['ferry', 'bus'],
+    description: 'WSF to Edmonds. 30-min crossing. Kitsap Transit connections.',
+  },
+
+  // ── PIERCE COUNTY ─────────────────────────────────────────────
+  tacoma_dome: {
+    id: 'tacoma_dome', name: 'Tacoma Dome Station', city: 'Tacoma',
+    lat: 47.2388, lon: -122.4277,
+    agencies: ['sound-transit', 'pierce-transit'], modes: ['commuter-rail', 'bus'],
+    description: 'Sounder South terminus. Future Link 1-Line. Major bus hub.',
+  },
+  tacoma_tc: {
+    id: 'tacoma_tc', name: 'Tacoma Transit Center', city: 'Tacoma',
+    lat: 47.2527, lon: -122.4427,
+    agencies: ['pierce-transit', 'sound-transit'], modes: ['bus', 'brt'],
+    description: 'Pierce Transit & Sound Transit bus hub in downtown Tacoma.',
+  },
+  puyallup_station: {
+    id: 'puyallup_station', name: 'Puyallup Station (Sounder)', city: 'Puyallup',
+    lat: 47.1875, lon: -122.2930,
+    agencies: ['sound-transit', 'pierce-transit'], modes: ['commuter-rail', 'bus'],
+    description: 'Sounder South stop. Pierce Transit connections.',
+  },
+  sumner_station: {
+    id: 'sumner_station', name: 'Sumner Station (Sounder)', city: 'Sumner',
+    lat: 47.2040, lon: -122.2412,
+    agencies: ['sound-transit'], modes: ['commuter-rail'],
+    description: 'Sounder South stop.',
+  },
+  auburn_station: {
+    id: 'auburn_station', name: 'Auburn Station (Sounder)', city: 'Auburn',
+    lat: 47.3024, lon: -122.2280,
+    agencies: ['sound-transit', 'kcm'], modes: ['commuter-rail', 'bus'],
+    description: 'Sounder South stop. Metro bus connections.',
+  },
+  kent_station: {
+    id: 'kent_station', name: 'Kent Station (Sounder)', city: 'Kent',
+    lat: 47.3812, lon: -122.2340,
+    agencies: ['sound-transit', 'kcm'], modes: ['commuter-rail', 'bus'],
+    description: 'Sounder South stop. Metro bus connections.',
+  },
+
+  // ── THURSTON COUNTY (FREE) ────────────────────────────────────
+  olympia_tc: {
+    id: 'olympia_tc', name: 'Olympia Transit Center', city: 'Olympia',
+    lat: 47.0454, lon: -122.9007,
+    agencies: ['intercity-transit'], modes: ['bus'],
+    description: 'Intercity Transit hub — ALL rides FREE. State Capitol area.',
+  },
+  lacey_tc: {
+    id: 'lacey_tc', name: 'Lacey Transit Center', city: 'Lacey',
+    lat: 47.0432, lon: -122.8024,
+    agencies: ['intercity-transit'], modes: ['bus'],
+    description: 'Intercity Transit — FREE. Connects to Olympia and Tumwater.',
+  },
+  tumwater_tc: {
+    id: 'tumwater_tc', name: 'Tumwater Transit Center', city: 'Tumwater',
+    lat: 47.0101, lon: -122.9087,
+    agencies: ['intercity-transit'], modes: ['bus'],
+    description: 'Intercity Transit — FREE. Near I-5 and Tumwater Falls.',
+  },
+  amtrak_olympia: {
+    id: 'amtrak_olympia', name: 'Olympia/Lacey Amtrak Station', city: 'Lacey',
+    lat: 46.9882, lon: -122.9149,
+    agencies: ['amtrak'], modes: ['intercity-rail'],
+    description: 'Amtrak Cascades stop. Intercity Transit bus to downtown Olympia.',
+  },
+
+  // ── CLARK COUNTY / VANCOUVER WA ───────────────────────────────
+  vancouver_ctran: {
+    id: 'vancouver_ctran', name: 'Vancouver C-TRAN Transit Center', city: 'Vancouver',
+    lat: 45.6312, lon: -122.5060,
+    agencies: ['ctran'], modes: ['bus', 'brt'],
+    description: 'C-TRAN hub. The Vine BRT. Express buses to Portland.',
+  },
+  amtrak_vancouver_wa: {
+    id: 'amtrak_vancouver_wa', name: 'Vancouver, WA Amtrak Station', city: 'Vancouver',
+    lat: 45.6286, lon: -122.6748,
+    agencies: ['amtrak'], modes: ['intercity-rail'],
+    description: 'Amtrak Cascades. Near downtown Vancouver, WA.',
+  },
+
+  // ── EASTERN WASHINGTON ────────────────────────────────────────
+  spokane_sta: {
+    id: 'spokane_sta', name: 'Spokane STA Plaza', city: 'Spokane',
+    lat: 47.6590, lon: -117.4259,
+    agencies: ['sta'], modes: ['bus', 'brt'],
+    description: 'STA main hub. City Line BRT. Downtown Spokane.',
+  },
+  kennewick_bft: {
+    id: 'kennewick_bft', name: 'Kennewick Transit Center (BFT)', city: 'Kennewick',
+    lat: 46.2110, lon: -119.1370,
+    agencies: ['bft'], modes: ['bus'],
+    description: 'Ben Franklin Transit. Tri-Cities area hub.',
+  },
+  richland_bft: {
+    id: 'richland_bft', name: 'Richland — George Washington Way (BFT)', city: 'Richland',
+    lat: 46.2855, lon: -119.2852,
+    agencies: ['bft'], modes: ['bus'],
+    description: 'Ben Franklin Transit stop in Richland.',
+  },
+  pasco_bft: {
+    id: 'pasco_bft', name: 'Pasco Transfer Point (BFT)', city: 'Pasco',
+    lat: 46.2399, lon: -119.1034,
+    agencies: ['bft'], modes: ['bus'],
+    description: 'Ben Franklin Transit. Pasco hub near train depot.',
+  },
+  wenatchee_link: {
+    id: 'wenatchee_link', name: 'Wenatchee Transit Center', city: 'Wenatchee',
+    lat: 47.4275, lon: -120.3340,
+    agencies: ['link-transit'], modes: ['bus'],
+    description: 'Link Transit hub for Chelan/Douglas counties.',
+  },
+  walla_walla_vt: {
+    id: 'walla_walla_vt', name: 'Walla Walla Transit Center', city: 'Walla Walla',
+    lat: 46.0646, lon: -118.3430,
+    agencies: ['valley-transit'], modes: ['bus'],
+    description: 'Valley Transit — ALL rides FREE. Walla Walla area.',
+  },
+
+  // ── NORTHWEST WASHINGTON ──────────────────────────────────────
+  bellingham_wta: {
+    id: 'bellingham_wta', name: 'Bellingham Station (WTA)', city: 'Bellingham',
+    lat: 48.7560, lon: -122.4756,
+    agencies: ['wta', 'amtrak'], modes: ['bus', 'intercity-rail'],
+    description: 'WTA transit hub. Amtrak Cascades. Near Western Washington University.',
+  },
+  mount_vernon: {
+    id: 'mount_vernon', name: 'Mt. Vernon Transit Center', city: 'Mount Vernon',
+    lat: 48.4217, lon: -122.3349,
+    agencies: ['skagit'], modes: ['bus'],
+    description: 'Skagit Transit hub. Connects to WTA and Island Transit.',
+  },
+  anacortes: {
+    id: 'anacortes', name: 'Anacortes Ferry Terminal', city: 'Anacortes',
+    lat: 48.5140, lon: -122.6127,
+    agencies: ['wsf', 'skagit'], modes: ['ferry', 'bus'],
+    description: 'WSF ferries to San Juan Islands & Sidney, BC. Skagit Transit bus.',
+  },
+  port_townsend: {
+    id: 'port_townsend', name: 'Port Townsend Ferry Terminal', city: 'Port Townsend',
+    lat: 48.1135, lon: -122.7600,
+    agencies: ['wsf', 'jefferson-transit'], modes: ['ferry', 'bus'],
+    description: 'WSF to Keystone (Whidbey Island). Jefferson Transit buses.',
+  },
+};
+
+// Bidirectional connections representing transit links.
+// "fare" is the one-way passenger fare in USD.
+// Connections are defined one-way and mirrored automatically in getConnections().
+const connectionList = [
+
+  // ── SOUND TRANSIT LINK 1-LINE ──────────────────────────────────
+  // (Tacoma Dome → Federal Way → SeaTac → Seattle → Lynnwood)
+  { from: 'tacoma_dome', to: 'federal_way_tc', route: 'ST Link 1 Line', agency: 'sound-transit', mode: 'light-rail', minutes: 14, fare: 2.25 },
+  { from: 'federal_way_tc', to: 'angle_lake', route: 'ST Link 1 Line', agency: 'sound-transit', mode: 'light-rail', minutes: 13, fare: 2.25 },
+  { from: 'angle_lake', to: 'seatac', route: 'ST Link 1 Line', agency: 'sound-transit', mode: 'light-rail', minutes: 3, fare: 2.25 },
+  { from: 'seatac', to: 'tukwila_link', route: 'ST Link 1 Line', agency: 'sound-transit', mode: 'light-rail', minutes: 3, fare: 2.25 },
+  { from: 'tukwila_link', to: 'rainier_beach', route: 'ST Link 1 Line', agency: 'sound-transit', mode: 'light-rail', minutes: 7, fare: 2.50 },
+  { from: 'rainier_beach', to: 'othello', route: 'ST Link 1 Line', agency: 'sound-transit', mode: 'light-rail', minutes: 3, fare: 2.50 },
+  { from: 'othello', to: 'columbia_city', route: 'ST Link 1 Line', agency: 'sound-transit', mode: 'light-rail', minutes: 3, fare: 2.50 },
+  { from: 'columbia_city', to: 'beacon_hill', route: 'ST Link 1 Line', agency: 'sound-transit', mode: 'light-rail', minutes: 4, fare: 2.50 },
+  { from: 'beacon_hill', to: 'sodo', route: 'ST Link 1 Line', agency: 'sound-transit', mode: 'light-rail', minutes: 3, fare: 2.25 },
+  { from: 'sodo', to: 'intl_dist', route: 'ST Link 1 Line', agency: 'sound-transit', mode: 'light-rail', minutes: 3, fare: 2.25 },
+  { from: 'intl_dist', to: 'pioneer_sq', route: 'ST Link 1 Line', agency: 'sound-transit', mode: 'light-rail', minutes: 2, fare: 2.25 },
+  { from: 'pioneer_sq', to: 'westlake', route: 'ST Link 1 Line', agency: 'sound-transit', mode: 'light-rail', minutes: 3, fare: 2.25 },
+  { from: 'westlake', to: 'capitol_hill', route: 'ST Link 1 Line', agency: 'sound-transit', mode: 'light-rail', minutes: 3, fare: 2.25 },
+  { from: 'capitol_hill', to: 'uw_station', route: 'ST Link 1 Line', agency: 'sound-transit', mode: 'light-rail', minutes: 3, fare: 2.25 },
+  { from: 'uw_station', to: 'northgate', route: 'ST Link 1 Line', agency: 'sound-transit', mode: 'light-rail', minutes: 5, fare: 2.25 },
+  { from: 'northgate', to: 'shoreline_148th', route: 'ST Link 1 Line', agency: 'sound-transit', mode: 'light-rail', minutes: 6, fare: 2.25 },
+  { from: 'shoreline_148th', to: 'shoreline_185th', route: 'ST Link 1 Line', agency: 'sound-transit', mode: 'light-rail', minutes: 3, fare: 2.25 },
+  { from: 'shoreline_185th', to: 'mountlake_terrace', route: 'ST Link 1 Line', agency: 'sound-transit', mode: 'light-rail', minutes: 4, fare: 2.50 },
+  { from: 'mountlake_terrace', to: 'lynnwood', route: 'ST Link 1 Line', agency: 'sound-transit', mode: 'light-rail', minutes: 3, fare: 2.75 },
+
+  // ── SOUND TRANSIT LINK 2-LINE ──────────────────────────────────
+  // (Int'l District → Bellevue → Redmond)
+  { from: 'intl_dist', to: 'judkins_park', route: 'ST Link 2 Line', agency: 'sound-transit', mode: 'light-rail', minutes: 4, fare: 2.25 },
+  { from: 'judkins_park', to: 'mercer_island', route: 'ST Link 2 Line', agency: 'sound-transit', mode: 'light-rail', minutes: 7, fare: 2.50 },
+  { from: 'mercer_island', to: 'south_bellevue', route: 'ST Link 2 Line', agency: 'sound-transit', mode: 'light-rail', minutes: 3, fare: 2.75 },
+  { from: 'south_bellevue', to: 'bellevue_downtown', route: 'ST Link 2 Line', agency: 'sound-transit', mode: 'light-rail', minutes: 9, fare: 3.00 },
+  { from: 'bellevue_downtown', to: 'east_main', route: 'ST Link 2 Line', agency: 'sound-transit', mode: 'light-rail', minutes: 2, fare: 3.00 },
+  { from: 'east_main', to: 'overlake_village', route: 'ST Link 2 Line', agency: 'sound-transit', mode: 'light-rail', minutes: 8, fare: 3.00 },
+  { from: 'overlake_village', to: 'redmond_tech', route: 'ST Link 2 Line', agency: 'sound-transit', mode: 'light-rail', minutes: 3, fare: 3.00 },
+  { from: 'redmond_tech', to: 'downtown_redmond', route: 'ST Link 2 Line', agency: 'sound-transit', mode: 'light-rail', minutes: 6, fare: 3.25 },
+
+  // ── SOUNDER SOUTH (PEAK WEEKDAY ONLY) ────────────────────────
+  { from: 'king_st', to: 'tukwila_sounder', route: 'Sounder South', agency: 'sound-transit', mode: 'commuter-rail', minutes: 16, fare: 3.50 },
+  { from: 'tukwila_sounder', to: 'kent_station', route: 'Sounder South', agency: 'sound-transit', mode: 'commuter-rail', minutes: 9, fare: 3.75 },
+  { from: 'kent_station', to: 'auburn_station', route: 'Sounder South', agency: 'sound-transit', mode: 'commuter-rail', minutes: 11, fare: 4.00 },
+  { from: 'auburn_station', to: 'sumner_station', route: 'Sounder South', agency: 'sound-transit', mode: 'commuter-rail', minutes: 14, fare: 4.50 },
+  { from: 'sumner_station', to: 'puyallup_station', route: 'Sounder South', agency: 'sound-transit', mode: 'commuter-rail', minutes: 3, fare: 4.75 },
+  { from: 'puyallup_station', to: 'tacoma_dome', route: 'Sounder South', agency: 'sound-transit', mode: 'commuter-rail', minutes: 10, fare: 5.25 },
+
+  // ── SOUNDER NORTH (LIMITED PEAK SERVICE) ─────────────────────
+  { from: 'king_st', to: 'edmonds_ferry', route: 'Sounder North', agency: 'sound-transit', mode: 'commuter-rail', minutes: 26, fare: 3.50 },
+  { from: 'edmonds_ferry', to: 'everett_station', route: 'Sounder North', agency: 'sound-transit', mode: 'commuter-rail', minutes: 18, fare: 4.00 },
+
+  // ── WASHINGTON STATE FERRIES ──────────────────────────────────
+  { from: 'colman_dock', to: 'bainbridge_ferry', route: 'WSF Seattle–Bainbridge', agency: 'wsf', mode: 'ferry', minutes: 35, fare: 3.65 },
+  { from: 'colman_dock', to: 'bremerton_ferry', route: 'WSF Seattle–Bremerton', agency: 'wsf', mode: 'ferry', minutes: 60, fare: 3.65 },
+  { from: 'edmonds_ferry', to: 'kingston_ferry', route: 'WSF Edmonds–Kingston', agency: 'wsf', mode: 'ferry', minutes: 30, fare: 2.90 },
+  { from: 'anacortes', to: 'port_townsend', route: 'WSF Keystone–Port Townsend', agency: 'wsf', mode: 'ferry', minutes: 35, fare: 3.40 },
+
+  // ── AMTRAK CASCADES ───────────────────────────────────────────
+  { from: 'king_st', to: 'edmonds_ferry', route: 'Amtrak Cascades', agency: 'amtrak', mode: 'intercity-rail', minutes: 28, fare: 7.00 },
+  { from: 'edmonds_ferry', to: 'everett_station', route: 'Amtrak Cascades', agency: 'amtrak', mode: 'intercity-rail', minutes: 20, fare: 7.00 },
+  { from: 'everett_station', to: 'bellingham_wta', route: 'Amtrak Cascades', agency: 'amtrak', mode: 'intercity-rail', minutes: 75, fare: 12.00 },
+  { from: 'king_st', to: 'tacoma_dome', route: 'Amtrak Cascades', agency: 'amtrak', mode: 'intercity-rail', minutes: 37, fare: 7.00 },
+  { from: 'tacoma_dome', to: 'amtrak_olympia', route: 'Amtrak Cascades', agency: 'amtrak', mode: 'intercity-rail', minutes: 35, fare: 7.00 },
+  { from: 'amtrak_olympia', to: 'amtrak_vancouver_wa', route: 'Amtrak Cascades', agency: 'amtrak', mode: 'intercity-rail', minutes: 52, fare: 9.00 },
+
+  // ── KC METRO RAPIDRIDE ─────────────────────────────────────────
+  { from: 'westlake', to: 'ballard', route: 'RapidRide D', agency: 'kcm', mode: 'brt', minutes: 25, fare: 2.75 },
+  { from: 'westlake', to: 'west_seattle', route: 'RapidRide C', agency: 'kcm', mode: 'brt', minutes: 25, fare: 2.75 },
+  { from: 'westlake', to: 'aurora_village', route: 'RapidRide E', agency: 'kcm', mode: 'brt', minutes: 40, fare: 2.75 },
+  { from: 'federal_way_tc', to: 'seatac', route: 'RapidRide A', agency: 'kcm', mode: 'brt', minutes: 30, fare: 2.75 },
+  { from: 'renton_tc', to: 'burien_tc', route: 'RapidRide F', agency: 'kcm', mode: 'brt', minutes: 35, fare: 2.75 },
+  { from: 'bellevue_downtown', to: 'redmond_tech', route: 'RapidRide B', agency: 'kcm', mode: 'brt', minutes: 28, fare: 2.75 },
+
+  // ── KC METRO EXPRESS BUSES ─────────────────────────────────────
+  { from: 'seatac', to: 'renton_tc', route: 'Metro Route 169', agency: 'kcm', mode: 'bus', minutes: 30, fare: 2.75 },
+  { from: 'burien_tc', to: 'seatac', route: 'Metro Route 124', agency: 'kcm', mode: 'bus', minutes: 20, fare: 2.75 },
+  { from: 'tukwila_link', to: 'renton_tc', route: 'Metro Route 140', agency: 'kcm', mode: 'bus', minutes: 25, fare: 2.75 },
+  { from: 'westlake', to: 'bellevue_downtown', route: 'Metro Route 550', agency: 'kcm', mode: 'bus', minutes: 30, fare: 2.75 },
+
+  // ── SOUND TRANSIT EXPRESS ─────────────────────────────────────
+  { from: 'westlake', to: 'lynnwood', route: 'ST Express 512', agency: 'sound-transit', mode: 'bus', minutes: 45, fare: 3.25 },
+  { from: 'lynnwood', to: 'everett_station', route: 'ST Express 512', agency: 'sound-transit', mode: 'bus', minutes: 25, fare: 3.25 },
+  { from: 'westlake', to: 'federal_way_tc', route: 'ST Express 577', agency: 'sound-transit', mode: 'bus', minutes: 50, fare: 3.25 },
+  { from: 'westlake', to: 'tacoma_dome', route: 'ST Express 594', agency: 'sound-transit', mode: 'bus', minutes: 70, fare: 3.50 },
+  { from: 'tacoma_dome', to: 'tacoma_tc', route: 'ST Express 594', agency: 'sound-transit', mode: 'bus', minutes: 5, fare: 0 },
+
+  // ── COMMUNITY TRANSIT (SNOHOMISH) ────────────────────────────
+  { from: 'lynnwood', to: 'ash_way', route: 'CT Swift Blue', agency: 'community-transit', mode: 'brt', minutes: 15, fare: 2.00 },
+  { from: 'ash_way', to: 'mariner', route: 'CT Swift Blue', agency: 'community-transit', mode: 'brt', minutes: 10, fare: 2.00 },
+  { from: 'mariner', to: 'everett_station', route: 'CT Swift Blue', agency: 'community-transit', mode: 'brt', minutes: 20, fare: 2.00 },
+  { from: 'aurora_village', to: 'lynnwood', route: 'CT Route 105', agency: 'community-transit', mode: 'bus', minutes: 20, fare: 2.00 },
+  { from: 'lynnwood', to: 'everett_station', route: 'CT Route 402', agency: 'community-transit', mode: 'bus', minutes: 35, fare: 3.25 },
+
+  // ── INTERCITY TRANSIT (THURSTON — FREE) ──────────────────────
+  { from: 'olympia_tc', to: 'lacey_tc', route: 'IT Route 41', agency: 'intercity-transit', mode: 'bus', minutes: 20, fare: 0 },
+  { from: 'lacey_tc', to: 'tumwater_tc', route: 'IT Route 62', agency: 'intercity-transit', mode: 'bus', minutes: 15, fare: 0 },
+  { from: 'tumwater_tc', to: 'olympia_tc', route: 'IT Route 62', agency: 'intercity-transit', mode: 'bus', minutes: 15, fare: 0 },
+  { from: 'olympia_tc', to: 'amtrak_olympia', route: 'IT Route 94', agency: 'intercity-transit', mode: 'bus', minutes: 12, fare: 0 },
+
+  // ── PIERCE TRANSIT ────────────────────────────────────────────
+  { from: 'tacoma_dome', to: 'tacoma_tc', route: 'PT Route 1', agency: 'pierce-transit', mode: 'bus', minutes: 8, fare: 2.00 },
+  { from: 'tacoma_tc', to: 'puyallup_station', route: 'PT Route 402', agency: 'pierce-transit', mode: 'bus', minutes: 35, fare: 2.00 },
+
+  // ── BEN FRANKLIN TRANSIT (TRI-CITIES) ────────────────────────
+  { from: 'kennewick_bft', to: 'richland_bft', route: 'BFT Route 5', agency: 'bft', mode: 'bus', minutes: 20, fare: 1.00 },
+  { from: 'richland_bft', to: 'pasco_bft', route: 'BFT Route 3', agency: 'bft', mode: 'bus', minutes: 25, fare: 1.00 },
+  { from: 'kennewick_bft', to: 'pasco_bft', route: 'BFT Route 3', agency: 'bft', mode: 'bus', minutes: 15, fare: 1.00 },
+
+  // ── C-TRAN (VANCOUVER WA) ────────────────────────────────────
+  { from: 'vancouver_ctran', to: 'amtrak_vancouver_wa', route: 'C-TRAN Route 4', agency: 'ctran', mode: 'bus', minutes: 15, fare: 1.75 },
+
+  // ── NORTHWEST CONNECTIONS ─────────────────────────────────────
+  { from: 'bellingham_wta', to: 'mount_vernon', route: 'Skagit-WTA Route 80X', agency: 'skagit', mode: 'bus', minutes: 45, fare: 1.00 },
+  { from: 'mount_vernon', to: 'anacortes', route: 'Skagit Route 40X', agency: 'skagit', mode: 'bus', minutes: 30, fare: 0.50 },
+  { from: 'anacortes', to: 'port_townsend', route: 'WSF Keystone–Port Townsend', agency: 'wsf', mode: 'ferry', minutes: 35, fare: 3.40 },
+
+  // ── WALKING/SHUTTLE CONNECTIONS ────────────────────────────────
+  // (short intermodal transfers)
+  { from: 'king_st', to: 'intl_dist', route: 'Walk', agency: null, mode: 'walk', minutes: 5, fare: 0 },
+  { from: 'colman_dock', to: 'westlake', route: 'Walk', agency: null, mode: 'walk', minutes: 10, fare: 0 },
+  { from: 'tukwila_sounder', to: 'tukwila_link', route: 'Shuttle', agency: 'sound-transit', mode: 'bus', minutes: 8, fare: 0 },
+];
+
+// Build adjacency list from connectionList (bidirectional)
+function buildGraph() {
+  const graph = {};
+  for (const c of connectionList) {
+    if (!graph[c.from]) graph[c.from] = [];
+    if (!graph[c.to]) graph[c.to] = [];
+    graph[c.from].push({ ...c, toStop: c.to });
+    graph[c.to].push({ ...c, fromStop: c.to, toStop: c.from, from: c.to, to: c.from });
+  }
+  return graph;
+}
+
+module.exports = { stops, connectionList, buildGraph };
