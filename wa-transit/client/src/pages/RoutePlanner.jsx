@@ -5,6 +5,17 @@ import RouteResults from '../components/RouteResults'
 import MapView from '../components/MapView'
 import { planTrip, getAllStops } from '../api/transit'
 
+const POPULAR = [
+  { label: 'Airport ✈️', origin: 'westlake', dest: 'seatac' },
+  { label: 'Bellevue', origin: 'westlake', dest: 'bellevue_downtown' },
+  { label: 'Tacoma', origin: 'westlake', dest: 'tacoma_dome' },
+  { label: 'Bainbridge ⛴️', origin: 'colman_dock', dest: 'bainbridge_ferry' },
+  { label: 'Everett', origin: 'westlake', dest: 'everett_station' },
+  { label: 'Olympia 🆓', origin: 'westlake', dest: 'olympia_tc' },
+  { label: 'Lynnwood', origin: 'westlake', dest: 'lynnwood' },
+  { label: 'Redmond', origin: 'westlake', dest: 'downtown_redmond' },
+]
+
 export default function RoutePlanner() {
   const [searchParams] = useSearchParams()
   const [origin, setOrigin] = useState(null)
@@ -21,11 +32,9 @@ export default function RoutePlanner() {
     getAllStops().then(setAllStops).catch(() => {})
   }, [])
 
-  // Pre-fill from URL params
   useEffect(() => {
     const originId = searchParams.get('origin')
     const destId = searchParams.get('dest')
-
     if ((originId || destId) && allStops.length > 0) {
       if (originId) {
         const s = allStops.find(s => s.id === originId)
@@ -38,7 +47,6 @@ export default function RoutePlanner() {
     }
   }, [searchParams, allStops])
 
-  // Auto-search when both stops are set from URL
   useEffect(() => {
     if (origin && destination && !results && !loading) {
       handleSearch(origin, destination)
@@ -59,6 +67,19 @@ export default function RoutePlanner() {
       setError(e.response?.data?.error || 'Failed to plan route')
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleQuick = (q) => {
+    const o = allStops.find(s => s.id === q.origin)
+    const d = allStops.find(s => s.id === q.dest)
+    if (o && d) {
+      setOrigin(o)
+      setDestination(d)
+      setResults(null)
+      setMapLegs([])
+      setSelectedRoute(null)
+      handleSearch(o, d)
     }
   }
 
@@ -83,7 +104,9 @@ export default function RoutePlanner() {
           ? 'absolute inset-0 z-20 md:relative md:inset-auto md:z-10 md:w-96'
           : 'w-0 overflow-hidden z-10'
       }`}>
-        <div className="p-4 border-b border-gray-200 bg-gray-50">
+
+        {/* Sticky header */}
+        <div className="flex-shrink-0 p-4 border-b border-gray-200 bg-gray-50">
           <div className="flex items-center justify-between mb-3">
             <h2 className="font-bold text-gray-900">Plan Your Trip</h2>
             <button
@@ -99,19 +122,14 @@ export default function RoutePlanner() {
               value={origin}
               onSelect={(s) => { setOrigin(s); setResults(null) }}
             />
-
-            {/* Swap button */}
             <div className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-2 z-10">
               <button
                 onClick={swap}
                 className="w-8 h-8 rounded-full bg-white border-2 border-gray-300 flex items-center
                   justify-center text-gray-500 hover:bg-gray-50 shadow-sm text-sm"
                 title="Swap origin and destination"
-              >
-                ⇅
-              </button>
+              >⇅</button>
             </div>
-
             <StopSearch
               label="To"
               placeholder="Search destination stop…"
@@ -126,7 +144,7 @@ export default function RoutePlanner() {
             className="mt-3 w-full py-2.5 rounded-lg bg-[#005DAA] text-white font-semibold text-sm
               hover:bg-blue-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
-            {loading ? 'Finding routes…' : 'Find Routes'}
+            {loading ? 'Finding routes…' : 'Find Routes →'}
           </button>
 
           {error && (
@@ -136,10 +154,32 @@ export default function RoutePlanner() {
           )}
         </div>
 
-        {/* Results */}
-        <div className="flex-1 overflow-hidden">
+        {/* Scrollable body */}
+        <div className="flex-1 overflow-y-auto">
+          {/* Popular routes */}
+          {!results && !loading && (
+            <div className="p-4 border-b border-gray-100">
+              <div className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">
+                Popular Routes
+              </div>
+              <div className="grid grid-cols-2 gap-1.5">
+                {POPULAR.map(q => (
+                  <button
+                    key={q.label}
+                    onClick={() => handleQuick(q)}
+                    disabled={allStops.length === 0}
+                    className="text-left text-xs px-2.5 py-2 rounded-lg bg-blue-50 hover:bg-blue-100
+                      text-blue-800 font-medium transition-colors border border-blue-100 disabled:opacity-40"
+                  >
+                    {q.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           {loading && (
-            <div className="flex items-center justify-center h-full text-gray-400">
+            <div className="flex items-center justify-center h-48 text-gray-400">
               <div className="text-center">
                 <div className="text-4xl mb-3 animate-pulse">🚌</div>
                 <p className="text-sm">Finding best routes…</p>
@@ -148,7 +188,7 @@ export default function RoutePlanner() {
           )}
 
           {!loading && !results && !error && (
-            <div className="flex items-center justify-center h-full text-gray-400 px-6">
+            <div className="flex items-center justify-center h-48 text-gray-400 px-6">
               <div className="text-center">
                 <div className="text-5xl mb-3">🗺️</div>
                 <p className="text-sm font-medium">Enter origin and destination</p>
@@ -186,12 +226,11 @@ export default function RoutePlanner() {
           </button>
         )}
 
-        {/* Info overlay when a route is selected */}
         {selectedRoute && (
           <div className="absolute bottom-4 left-4 right-4 bg-white rounded-xl shadow-xl p-3 border border-gray-200">
             <div className="flex items-center justify-between text-sm">
-              <div className="font-semibold">{selectedRoute.summary}</div>
-              <div className="flex gap-4 text-right">
+              <div className="font-semibold truncate">{selectedRoute.summary}</div>
+              <div className="flex gap-4 flex-shrink-0 text-right">
                 <div>
                   <span className="text-gray-500 text-xs">Time</span>
                   <div className="font-bold">

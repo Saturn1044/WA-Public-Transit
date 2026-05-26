@@ -1,5 +1,34 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+
+function PacificClock() {
+  const [time, setTime] = useState('')
+
+  useEffect(() => {
+    const update = () => {
+      const now = new Date()
+      const formatted = now.toLocaleTimeString('en-US', {
+        timeZone: 'America/Los_Angeles',
+        hour: 'numeric',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true,
+      })
+      const abbr = now.toLocaleTimeString('en-US', {
+        timeZone: 'America/Los_Angeles',
+        timeZoneName: 'short',
+      }).split(' ').pop()
+      setTime(`${formatted} ${abbr}`)
+    }
+    update()
+    const id = setInterval(update, 1000)
+    return () => clearInterval(id)
+  }, [])
+
+  return (
+    <span className="text-gray-300 text-xs font-mono tabular-nums">{time}</span>
+  )
+}
 
 const navLinks = [
   { to: '/', label: 'Map' },
@@ -24,7 +53,9 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop nav */}
-        <div className="hidden md:flex items-center gap-1">
+        <div className="hidden md:flex items-center gap-4">
+          <PacificClock />
+          <div className="flex items-center gap-1">
           {navLinks.map(link => (
             <Link
               key={link.to}
@@ -38,6 +69,7 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
+          </div>
         </div>
 
         {/* Mobile hamburger button */}
