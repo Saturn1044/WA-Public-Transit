@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
 const navLinks = [
@@ -9,9 +10,10 @@ const navLinks = [
 
 export default function Navbar() {
   const { pathname } = useLocation()
+  const [mobileOpen, setMobileOpen] = useState(false)
 
   return (
-    <nav className="bg-[#0d1b2a] text-white shadow-lg z-10 flex-shrink-0">
+    <nav className="bg-[#0d1b2a] text-white shadow-lg z-20 flex-shrink-0">
       <div className="max-w-screen-xl mx-auto px-4 h-14 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2 font-bold text-lg tracking-tight">
           <span className="text-2xl">🚌</span>
@@ -21,7 +23,8 @@ export default function Navbar() {
           </span>
         </Link>
 
-        <div className="flex items-center gap-1">
+        {/* Desktop nav */}
+        <div className="hidden md:flex items-center gap-1">
           {navLinks.map(link => (
             <Link
               key={link.to}
@@ -36,7 +39,38 @@ export default function Navbar() {
             </Link>
           ))}
         </div>
+
+        {/* Mobile hamburger button */}
+        <button
+          className="md:hidden flex flex-col gap-1 p-2 rounded-md hover:bg-white/10 transition-colors"
+          onClick={() => setMobileOpen(o => !o)}
+          aria-label="Toggle menu"
+        >
+          <span className="block w-5 h-0.5 bg-white" />
+          <span className="block w-5 h-0.5 bg-white" />
+          <span className="block w-5 h-0.5 bg-white" />
+        </button>
       </div>
+
+      {/* Mobile dropdown */}
+      {mobileOpen && (
+        <div className="md:hidden border-t border-white/10 px-3 pb-3 pt-1">
+          {navLinks.map(link => (
+            <Link
+              key={link.to}
+              to={link.to}
+              onClick={() => setMobileOpen(false)}
+              className={`flex items-center px-3 py-3 rounded-md text-sm font-medium transition-colors mb-0.5 ${
+                pathname === link.to
+                  ? 'bg-[#005DAA] text-white'
+                  : 'text-gray-300 hover:text-white hover:bg-white/10'
+              }`}
+            >
+              {link.label}
+            </Link>
+          ))}
+        </div>
+      )}
     </nav>
   )
 }

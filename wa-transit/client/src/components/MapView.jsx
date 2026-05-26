@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
@@ -191,6 +191,7 @@ export default function MapView({ stops, selectedStop, onStopClick, routeLegs })
   const mapInstanceRef = useRef(null)
   const markersRef = useRef([])
   const routeLayerRef = useRef(null)
+  const [legendCollapsed, setLegendCollapsed] = useState(false)
 
   // Initialize map
   useEffect(() => {
@@ -320,50 +321,58 @@ export default function MapView({ stops, selectedStop, onStopClick, routeLegs })
       <div ref={mapRef} className="w-full h-full" />
 
       {/* ── Legend ── */}
-      <div className="absolute bottom-5 right-4 z-[500] bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden"
-           style={{ minWidth: 220 }}>
-        <div className="bg-[#0d1b2a] text-white text-xs font-bold px-3 py-2 tracking-wide uppercase">
-          Transit Lines
-        </div>
-        <div className="px-3 py-2 space-y-1.5">
-          {LEGEND_ITEMS.map((item, i) => (
-            <div key={i} className="flex items-center gap-2">
-              <svg width="36" height="10" className="flex-shrink-0">
-                <line
-                  x1="2" y1="5" x2="34" y2="5"
-                  stroke={item.color}
-                  strokeWidth={item.weight}
-                  strokeDasharray={
-                    item.dash === 'dots' ? '3 3'
-                    : item.dash === 'short' ? '6 3'
-                    : item.dash ? '8 4'
-                    : 'none'
-                  }
-                  strokeLinecap="round"
-                />
-              </svg>
-              <span className="text-xs text-gray-700 leading-tight">{item.label}</span>
+      <div className="absolute bottom-4 right-3 z-[500] bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden"
+           style={{ minWidth: legendCollapsed ? 0 : 210, maxWidth: 230 }}>
+        <button
+          onClick={() => setLegendCollapsed(c => !c)}
+          className="w-full bg-[#0d1b2a] text-white text-xs font-bold px-3 py-2 tracking-wide uppercase flex items-center justify-between"
+        >
+          <span>Map Legend</span>
+          <span className="text-gray-400 text-base leading-none">{legendCollapsed ? '+' : '−'}</span>
+        </button>
+        {!legendCollapsed && (
+          <>
+            <div className="px-3 py-2 space-y-1.5">
+              {LEGEND_ITEMS.map((item, i) => (
+                <div key={i} className="flex items-center gap-2">
+                  <svg width="36" height="10" className="flex-shrink-0">
+                    <line
+                      x1="2" y1="5" x2="34" y2="5"
+                      stroke={item.color}
+                      strokeWidth={item.weight}
+                      strokeDasharray={
+                        item.dash === 'dots' ? '3 3'
+                        : item.dash === 'short' ? '6 3'
+                        : item.dash ? '8 4'
+                        : 'none'
+                      }
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  <span className="text-xs text-gray-700 leading-tight">{item.label}</span>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-        <div className="border-t border-gray-100 px-3 py-2 space-y-1.5">
-          <div className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Stops</div>
-          <div className="flex items-center gap-2">
-            <svg width="14" height="14"><circle cx="7" cy="7" r="5" fill="#005DAA" stroke="white" strokeWidth="2"/></svg>
-            <span className="text-xs text-gray-700">Transit Stop</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <svg width="14" height="14"><circle cx="7" cy="7" r="6" fill="#FFD700" stroke="white" strokeWidth="2"/></svg>
-            <span className="text-xs text-gray-700">Selected Stop</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <svg width="14" height="14"><circle cx="7" cy="7" r="6" fill="#22c55e" stroke="white" strokeWidth="2"/></svg>
-            <span className="text-xs text-gray-700">Destination</span>
-          </div>
-        </div>
-        <div className="bg-gray-50 px-3 py-1.5 border-t border-gray-100">
-          <p className="text-xs text-gray-400 italic">Hover any stop or line for details</p>
-        </div>
+            <div className="border-t border-gray-100 px-3 py-2 space-y-1.5">
+              <div className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Stops</div>
+              <div className="flex items-center gap-2">
+                <svg width="14" height="14"><circle cx="7" cy="7" r="5" fill="#005DAA" stroke="white" strokeWidth="2"/></svg>
+                <span className="text-xs text-gray-700">Transit Stop</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <svg width="14" height="14"><circle cx="7" cy="7" r="6" fill="#FFD700" stroke="white" strokeWidth="2"/></svg>
+                <span className="text-xs text-gray-700">Selected Stop</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <svg width="14" height="14"><circle cx="7" cy="7" r="6" fill="#22c55e" stroke="white" strokeWidth="2"/></svg>
+                <span className="text-xs text-gray-700">Destination</span>
+              </div>
+            </div>
+            <div className="bg-gray-50 px-3 py-1.5 border-t border-gray-100">
+              <p className="text-xs text-gray-400 italic">Tap any stop or line for details</p>
+            </div>
+          </>
+        )}
       </div>
     </div>
   )

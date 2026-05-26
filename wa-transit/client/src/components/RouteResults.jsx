@@ -24,7 +24,7 @@ function formatTime(minutes) {
   if (minutes < 60) return `${minutes} min`
   const h = Math.floor(minutes / 60)
   const m = minutes % 60
-  return m === 0 ? `${h}h` : `${h}h ${m}m`
+  return m === 0 ? `${h} hr` : `${h} hr ${m} min`
 }
 
 function formatFare(fare) {
@@ -52,7 +52,8 @@ function RouteCard({ route, index, onSelect, selected }) {
           <div className="flex items-center gap-2 flex-wrap">
             {[...new Set(route.legs.map(l => l.mode))].map(m => (
               <span key={m} className={`text-xs px-2 py-0.5 rounded-full font-medium ${MODE_COLORS[m] || 'bg-gray-100'}`}>
-                {MODE_ICONS[m]} {m.replace('-', ' ')}
+                {MODE_ICONS[m]}{' '}
+                {m.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
               </span>
             ))}
           </div>

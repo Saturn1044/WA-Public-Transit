@@ -74,8 +74,10 @@ export default function Home() {
     <div className="relative h-full flex">
       {/* ── Side panel ── */}
       <div
-        className={`relative z-10 flex flex-col bg-white shadow-xl border-r border-gray-200 transition-all duration-300 ${
-          panelOpen ? 'w-96' : 'w-0 overflow-hidden'
+        className={`flex flex-col bg-white shadow-xl border-r border-gray-200 transition-all duration-300 ${
+          panelOpen
+            ? 'absolute inset-0 z-20 md:relative md:inset-auto md:z-10 md:w-96'
+            : 'w-0 overflow-hidden z-10'
         }`}
       >
         <div className="flex-shrink-0 p-4 bg-[#0d1b2a] text-white">
@@ -83,7 +85,7 @@ export default function Home() {
             <h1 className="font-bold text-lg">Trip Planner</h1>
             <button
               onClick={() => setPanelOpen(false)}
-              className="text-gray-400 hover:text-white text-xl leading-none"
+              className="text-gray-400 hover:text-white text-2xl leading-none w-9 h-9 flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors"
             >×</button>
           </div>
 
@@ -223,7 +225,7 @@ export default function Home() {
                   <div className="font-bold">
                     {selectedRoute.totalMinutes < 60
                       ? `${selectedRoute.totalMinutes} min`
-                      : `${Math.floor(selectedRoute.totalMinutes/60)}h ${selectedRoute.totalMinutes%60}m`}
+                      : `${Math.floor(selectedRoute.totalMinutes/60)} hr ${selectedRoute.totalMinutes%60} min`}
                   </div>
                 </div>
                 <div>

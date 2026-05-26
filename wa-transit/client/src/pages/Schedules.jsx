@@ -331,6 +331,7 @@ function Timetable({ route, currentMinutes }) {
 export default function Schedules() {
   const [selectedRoute, setSelectedRoute] = useState(schedules[0] || null)
   const [search, setSearch] = useState('')
+  const [mobileShowTimetable, setMobileShowTimetable] = useState(false)
   const [currentMinutes, setCurrentMinutes] = useState(() => {
     const d = new Date()
     return d.getHours() * 60 + d.getMinutes()
@@ -343,6 +344,11 @@ export default function Schedules() {
     }, 30_000)
     return () => clearInterval(id)
   }, [])
+
+  const handleRouteSelect = (route) => {
+    setSelectedRoute(route)
+    setMobileShowTimetable(true)
+  }
 
   const filteredGroups = useMemo(() => {
     if (!search.trim()) return routeGroups
@@ -363,9 +369,10 @@ export default function Schedules() {
   }, [search])
 
   return (
-    <div className="flex h-full bg-gray-50">
+    <div className="flex h-full bg-gray-50 relative">
       {/* ── Sidebar ── */}
-      <div className="w-72 flex-shrink-0 bg-white border-r border-gray-200 flex flex-col overflow-hidden">
+      <div className={`flex-shrink-0 bg-white border-r border-gray-200 flex flex-col overflow-hidden
+        ${mobileShowTimetable ? 'hidden md:flex md:w-72' : 'absolute inset-0 z-10 md:relative md:inset-auto md:z-auto md:w-72'}`}>
         <div className="flex-shrink-0 p-3 bg-[#0d1b2a]">
           <div className="flex items-center justify-between mb-2">
             <h2 className="text-white font-bold text-sm">Schedules</h2>
@@ -389,7 +396,7 @@ export default function Schedules() {
                 key={group.id}
                 group={group}
                 selected={selectedRoute}
-                onSelect={setSelectedRoute}
+                onSelect={handleRouteSelect}
                 currentMinutes={currentMinutes}
               />
             ))
@@ -401,7 +408,16 @@ export default function Schedules() {
       </div>
 
       {/* ── Main panel ── */}
-      <div className="flex-1 overflow-y-auto p-6">
+      <div className={`flex-1 overflow-y-auto p-4 md:p-6
+        ${!mobileShowTimetable ? 'hidden md:block' : 'block'}`}>
+        {/* Mobile back button */}
+        <button
+          className="md:hidden mb-4 flex items-center gap-1.5 text-sm text-[#005DAA] font-semibold"
+          onClick={() => setMobileShowTimetable(false)}
+        >
+          ← All Routes
+        </button>
+
         {selectedRoute ? (
           <Timetable route={selectedRoute} currentMinutes={currentMinutes} />
         ) : (

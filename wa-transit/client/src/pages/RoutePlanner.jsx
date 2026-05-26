@@ -15,6 +15,7 @@ export default function RoutePlanner() {
   const [allStops, setAllStops] = useState([])
   const [selectedRoute, setSelectedRoute] = useState(null)
   const [mapLegs, setMapLegs] = useState([])
+  const [panelOpen, setPanelOpen] = useState(true)
 
   useEffect(() => {
     getAllStops().then(setAllStops).catch(() => {})
@@ -75,11 +76,21 @@ export default function RoutePlanner() {
   }
 
   return (
-    <div className="flex h-full">
+    <div className="flex h-full relative">
       {/* Left panel */}
-      <div className="w-96 flex-shrink-0 flex flex-col bg-white border-r border-gray-200 shadow-sm">
+      <div className={`flex flex-col bg-white border-r border-gray-200 shadow-sm transition-all duration-300 ${
+        panelOpen
+          ? 'absolute inset-0 z-20 md:relative md:inset-auto md:z-10 md:w-96'
+          : 'w-0 overflow-hidden z-10'
+      }`}>
         <div className="p-4 border-b border-gray-200 bg-gray-50">
-          <h2 className="font-bold text-gray-900 mb-3">Plan Your Trip</h2>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="font-bold text-gray-900">Plan Your Trip</h2>
+            <button
+              onClick={() => setPanelOpen(false)}
+              className="md:hidden text-gray-400 hover:text-gray-600 text-2xl leading-none w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors"
+            >×</button>
+          </div>
 
           <div className="space-y-2 relative">
             <StopSearch
@@ -165,6 +176,16 @@ export default function RoutePlanner() {
           onStopClick={null}
         />
 
+        {!panelOpen && (
+          <button
+            onClick={() => setPanelOpen(true)}
+            className="absolute top-4 left-4 z-[500] bg-white shadow-xl border border-gray-200
+              rounded-xl px-4 py-2.5 text-sm font-bold text-[#005DAA] hover:bg-blue-50 flex items-center gap-2"
+          >
+            🗺️ Plan a Trip
+          </button>
+        )}
+
         {/* Info overlay when a route is selected */}
         {selectedRoute && (
           <div className="absolute bottom-4 left-4 right-4 bg-white rounded-xl shadow-xl p-3 border border-gray-200">
@@ -176,7 +197,7 @@ export default function RoutePlanner() {
                   <div className="font-bold">
                     {selectedRoute.totalMinutes < 60
                       ? `${selectedRoute.totalMinutes} min`
-                      : `${Math.floor(selectedRoute.totalMinutes/60)}h ${selectedRoute.totalMinutes%60}m`}
+                      : `${Math.floor(selectedRoute.totalMinutes/60)} hr ${selectedRoute.totalMinutes%60} min`}
                   </div>
                 </div>
                 <div>

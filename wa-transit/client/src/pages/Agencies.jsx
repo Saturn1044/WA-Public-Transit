@@ -74,8 +74,8 @@ export default function Agencies() {
             placeholder="Search agencies…"
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="px-3 py-2 rounded-lg border border-gray-300 text-sm focus:outline-none
-              focus:ring-2 focus:ring-[#005DAA] bg-white w-48"
+            className="px-3 py-2 rounded-lg border border-gray-300 text-sm text-gray-900 focus:outline-none
+              focus:ring-2 focus:ring-[#005DAA] bg-white w-48 placeholder-gray-400"
           />
           <select
             value={region}
